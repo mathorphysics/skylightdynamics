@@ -7,6 +7,9 @@
     "@react-router/express": "^8.3.0",
     "express": "^5.2.1"
   },
+  "optionalDependencies": {
+    "@rolldown/binding-linux-x64-gnu": "1.2.15"
+  },
   "scripts": {
     "setup": "bun install",
     "dev": "concurrently --kill-others --raw \"npm run dev --prefix apps/web\" \"npm run dev --prefix apps/pocketbase\"",
