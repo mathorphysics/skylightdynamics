@@ -44,7 +44,7 @@ export default defineConfig({
 		headers: {
 			'Cross-Origin-Embedder-Policy': 'credentialless',
 		},
-		allowedHosts: ['.app-preview.com', '.app-preview.io', 'skylightdynamics.com', '.skylightdynamics.com'],
+		allowedHosts: ['.app-preview.com', '.app-preview.io', '.hostingersite.com', 'skylightdynamics.com', '.skylightdynamics.com'],
 		fs: {
 			strict: true,
 			allow: [__dirname, path.join(monorepoRoot, 'node_modules')],
@@ -53,7 +53,7 @@ export default defineConfig({
 	preview: {
 		port: 3000,
 		host: '::',
-		allowedHosts: ['.app-preview.com', '.app-preview.io', 'skylightdynamics.com', '.skylightdynamics.com'],
+		allowedHosts: ['.app-preview.com', '.app-preview.io', '.hostingersite.com', 'skylightdynamics.com', '.skylightdynamics.com'],
 	},
 	resolve: {
 		alias: {
