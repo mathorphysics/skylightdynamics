@@ -1,5 +1,5 @@
 import { Fragment } from 'react';
-import { ArrowDown, ArrowUpRight } from 'lucide-react';
+import { ArrowDown } from 'lucide-react';
 import { ParticleGlobe } from '@/components/home/particle-globe';
 import type { SiteSettings } from '@/data/performance-media';
 
@@ -28,9 +28,6 @@ export function Hero({ settings }: { settings: SiteSettings }) {
 							</Fragment>
 						))}
 					</p>
-					<a className="primary-button" href="#contact">
-						Create your spectacle <ArrowUpRight size={18} />
-					</a>
 				</div>
 			</div>
 			<div className="hero-rail">

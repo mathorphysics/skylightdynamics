@@ -3,8 +3,13 @@
 // resolves. The live values are managed in the PocketBase admin dashboard via
 // the `site_settings` and `performance_media` collections.
 
+import { cmsImageUrl } from '@/lib/cms-media';
+
 export type SiteSettings = {
+	id?: string;
+	collectionName?: string;
 	opening_image: string;
+	opening_image_file?: string;
 	opening_video: string;
 	hero_eyebrow: string;
 	hero_headline_1: string;
@@ -15,9 +20,11 @@ export type SiteSettings = {
 
 export type PerformanceItem = {
 	id?: string;
+	collectionName?: string;
 	title: string;
 	detail: string;
 	image: string;
+	image_file?: string;
 	alt: string;
 };
 
@@ -51,5 +58,11 @@ export const defaultMedia: PerformanceItem[] = [
 ];
 
 export function mediaSrcSet(url: string) {
+	if (url.startsWith('/hcgi/')) return '';
+
 	return `${url}?width=375 375w, ${url}?width=768 768w, ${url}?width=1024 1024w, ${url} 1344w`;
+}
+
+export function preparePerformanceItem(item: PerformanceItem): PerformanceItem {
+	return { ...item, image: cmsImageUrl(item, 'image_file', 'image', item.image) };
 }

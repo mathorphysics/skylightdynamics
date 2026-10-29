@@ -1,0 +1,1 @@
+var e=e=>e instanceof Date?e:new Date(e),t=({locale:e,timeZone:t=`UTC`,...n},r)=>new Intl.DateTimeFormat(e,{timeZone:t,...Object.keys(n).length?n:r}),n=(n,r)=>t(r,{dateStyle:`long`}).format(e(n));export{n as t};

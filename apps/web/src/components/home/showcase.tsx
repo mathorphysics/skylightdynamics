@@ -38,7 +38,7 @@ export function Showcase({ items }: { items: PerformanceItem[] }) {
 						>
 							<img
 								src={item.image}
-								srcSet={mediaSrcSet(item.image)}
+								srcSet={mediaSrcSet(item.image) || undefined}
 								sizes="(min-width: 768px) 46vw, 100vw"
 								alt={item.alt}
 								loading="lazy"

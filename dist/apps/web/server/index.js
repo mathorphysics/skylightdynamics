@@ -5,7 +5,7 @@ import { renderToPipeableStream } from "react-dom/server";
 import { Links, Meta, Outlet, Scripts, ScrollRestoration, ServerRouter, UNSAFE_withComponentProps, UNSAFE_withErrorBoundaryProps, data, isRouteErrorResponse, useLocation } from "react-router";
 import { Fragment, jsx, jsxs } from "react/jsx-runtime";
 import { Fragment as Fragment$1, useCallback, useEffect, useId, useRef, useState } from "react";
-import { Aperture, ArrowDown, ArrowUpRight, Braces, Check, Crosshair, Layers, Menu, Orbit, RadioTower, Sparkle, X } from "lucide-react";
+import { Aperture, ArrowDown, ArrowLeft, ArrowUpRight, Braces, Check, Crosshair, Layers, Menu, Orbit, RadioTower, Sparkle, X } from "lucide-react";
 import * as THREE from "three";
 import PocketBase, { ClientResponseError } from "pocketbase";
 import ipaddr from "ipaddr.js";
@@ -76,7 +76,7 @@ function handleRequest(request, responseStatusCode, responseHeaders, routerConte
 	});
 }
 // src/index.css?url
-var src_default = "/assets/index-CwwroE0A.css";
+var src_default = "/assets/index-CNn0awCt.css";
 // src/lib/cookie-consent.ts
 var CONSENT_COOKIE = "cc_cookie";
 var CONSENT_MAX_AGE_SECONDS = 15724800;
@@ -308,7 +308,7 @@ var root_exports = /* @__PURE__ */ __exportAll({
 	default: () => root_default,
 	headers: () => headers,
 	links: () => links,
-	loader: () => loader$6
+	loader: () => loader$7
 });
 var links = () => [
 	{
@@ -342,7 +342,7 @@ var links = () => [
 * A `meta` export can only reach server data through `matches`, and the `headers`
 * export cannot see loader data at all, so both have to travel this way.
 */
-function loader$6({ request }) {
+function loader$7({ request }) {
 	const origin = siteOrigin(request);
 	return data({ origin }, { headers: { Link: `<${origin}/sitemap.xml>; rel="sitemap"; type="application/xml"` } });
 }
@@ -665,13 +665,9 @@ function Hero({ settings }) {
 						" ",
 						/* @__PURE__ */ jsx("span", { children: settings.hero_headline_3 })
 					] }),
-					/* @__PURE__ */ jsxs("div", {
+					/* @__PURE__ */ jsx("div", {
 						className: "hero-bottom",
-						children: [/* @__PURE__ */ jsx("p", { children: subtextLines.map((line, i) => /* @__PURE__ */ jsxs(Fragment$1, { children: [i > 0 && /* @__PURE__ */ jsx("br", {}), line] }, i)) }), /* @__PURE__ */ jsxs("a", {
-							className: "primary-button",
-							href: "#contact",
-							children: ["Create your spectacle ", /* @__PURE__ */ jsx(ArrowUpRight, { size: 18 })]
-						})]
+						children: /* @__PURE__ */ jsx("p", { children: subtextLines.map((line, i) => /* @__PURE__ */ jsxs(Fragment$1, { children: [i > 0 && /* @__PURE__ */ jsx("br", {}), line] }, i)) })
 					})
 				]
 			}),
@@ -732,6 +728,17 @@ function Experience() {
 		})]
 	});
 }
+// src/lib/cms-media.ts
+function cmsImageUrl(record, fileField, urlField, fallback = "") {
+	const values = record;
+	const filename = values[fileField];
+	if (typeof filename === "string" && filename && record.id) {
+		const collection = record.collectionName || "articles";
+		return `/hcgi/platform/api/files/${encodeURIComponent(collection)}/${encodeURIComponent(record.id)}/${encodeURIComponent(filename)}`;
+	}
+	const externalUrl = values[urlField];
+	return typeof externalUrl === "string" && externalUrl ? externalUrl : fallback;
+}
 // src/data/performance-media.ts
 var defaultSettings = {
 	opening_image: "https://images.hostinger.com/cf8a50bf-40b7-467e-9ba0-86cc7ca1a9d3/7cf1a1c7-e1b7-4dad-9417-6051d32dd038.png",
@@ -754,7 +761,14 @@ var defaultMedia = [{
 	alt: "White points of light arranged in a geometric starburst over water"
 }];
 function mediaSrcSet(url) {
+	if (url.startsWith("/hcgi/")) return "";
 	return `${url}?width=375 375w, ${url}?width=768 768w, ${url}?width=1024 1024w, ${url} 1344w`;
+}
+function preparePerformanceItem(item) {
+	return {
+		...item,
+		image: cmsImageUrl(item, "image_file", "image", item.image)
+	};
 }
 // src/components/home/showcase.tsx
 function Showcase({ items }) {
@@ -792,7 +806,7 @@ function Showcase({ items }) {
 					},
 					children: [/* @__PURE__ */ jsx("img", {
 						src: item.image,
-						srcSet: mediaSrcSet(item.image),
+						srcSet: mediaSrcSet(item.image) || void 0,
 						sizes: "(min-width: 768px) 46vw, 100vw",
 						alt: item.alt,
 						loading: "lazy"
@@ -1289,10 +1303,10 @@ var pocketbaseAdmin = {
 // src/routes/home.tsx
 var home_exports = /* @__PURE__ */ __exportAll({
 	default: () => home_default,
-	loader: () => loader$5,
-	meta: () => meta$2
+	loader: () => loader$6,
+	meta: () => meta$3
 });
-async function loader$5() {
+async function loader$6() {
 	let settings = { ...defaultSettings };
 	let media = defaultMedia.map((m, i) => ({
 		id: `default-${i}`,
@@ -1303,7 +1317,8 @@ async function loader$5() {
 		if (res.items.length > 0) {
 			const s = res.items[0];
 			settings = {
-				opening_image: s.opening_image || defaultSettings.opening_image,
+				opening_image: cmsImageUrl(s, "opening_image_file", "opening_image", defaultSettings.opening_image),
+				opening_image_file: s.opening_image_file || "",
 				opening_video: s.opening_video || "",
 				hero_eyebrow: s.hero_eyebrow || defaultSettings.hero_eyebrow,
 				hero_headline_1: s.hero_headline_1 || defaultSettings.hero_headline_1,
@@ -1319,14 +1334,14 @@ async function loader$5() {
 			sort: "sort_order",
 			perPage: 60
 		});
-		if (res.items.length > 0) media = res.items;
+		if (res.items.length > 0) media = res.items.map(preparePerformanceItem);
 	} catch {}
 	return {
 		settings,
 		media
 	};
 }
-function meta$2({ matches, location, loaderData }) {
+function meta$3({ matches, location, loaderData }) {
 	return seo({
 		matches,
 		location
@@ -1362,9 +1377,9 @@ var home_default = UNSAFE_withComponentProps(function HomePage({ loaderData }) {
 // src/routes/team.tsx
 var team_exports = /* @__PURE__ */ __exportAll({
 	default: () => team_default,
-	meta: () => meta$1
+	meta: () => meta$2
 });
-function meta$1({ matches, location }) {
+function meta$2({ matches, location }) {
 	return seo({
 		matches,
 		location
@@ -1446,28 +1461,92 @@ var team_default = UNSAFE_withComponentProps(function TeamPage() {
 		/* @__PURE__ */ jsx(SiteFooter, {})
 	] });
 });
+// src/data/articles.ts
+var defaultArticles = [
+	{
+		id: "default-urban-skies",
+		title: "Designing for urban night skies",
+		slug: "designing-for-urban-night-skies",
+		category: "Research",
+		excerpt: "How scale, viewing distance and the character of a place shape a drone-light composition.",
+		body: `<p>A city skyline is never a blank canvas. Buildings, ambient light and the movement of an audience all influence how a formation is perceived.</p><h2>Design begins with the place</h2><p>We study sightlines, scale and visual rhythm before choreography begins. The goal is not simply to place an image in the sky, but to create a composition that belongs to its setting.</p><h2>Clarity at a distance</h2><p>Strong silhouettes, controlled transitions and considered pacing help an idea remain legible across a large viewing area. Every movement has to support the story as well as the technical environment.</p>`,
+		coverImage: defaultMedia[0].image,
+		cover_image_url: defaultMedia[0].image,
+		published_at: "2026-10-15 12:00:00.000Z",
+		featured: true
+	},
+	{
+		id: "default-brand-storytelling",
+		title: "Brand storytelling at monumental scale",
+		slug: "brand-storytelling-at-monumental-scale",
+		category: "Commercial ideas",
+		excerpt: "Turning a campaign thought into a public moment people can experience and share together.",
+		body: `<p>Drone light offers brands something rare: a message can become an event, experienced collectively rather than simply viewed on a screen.</p><h2>More than a logo reveal</h2><p>The strongest branded performances build anticipation, create transformation and earn the final image. Narrative gives the audience a reason to stay with the story.</p><h2>Designed to travel</h2><p>A live spectacle can also become a rich source of campaign material. Camera positions, key formations and timing can be planned for both the audience on site and the viewers who discover it later.</p>`,
+		coverImage: defaultMedia[1].image,
+		cover_image_url: defaultMedia[1].image,
+		published_at: "2026-09-22 12:00:00.000Z"
+	},
+	{
+		id: "default-shared-memory",
+		title: "From festival moment to shared memory",
+		slug: "from-festival-moment-to-shared-memory",
+		category: "Commercial ideas",
+		excerpt: "Why collective attention, pacing and a sense of place matter when designing for live audiences.",
+		body: `<p>At a festival or civic celebration, the audience arrives with different expectations but looks up at the same sky. That shared point of focus is the beginning of a memorable experience.</p><h2>Build a collective rhythm</h2><p>Quiet passages make scale feel larger. Surprising transitions create energy. A carefully structured sequence gives a crowd time to notice, react and anticipate together.</p><h2>Leave room for wonder</h2><p>Technology makes the performance possible, but emotion is what remains. Our research asks how each technical choice can make the final experience feel more human.</p>`,
+		coverImage: defaultMedia[0].image,
+		cover_image_url: defaultMedia[0].image,
+		published_at: "2026-08-30 12:00:00.000Z"
+	}
+];
+function prepareArticle(article) {
+	return {
+		...article,
+		coverImage: cmsImageUrl(article, "cover_image", "cover_image_url", article.coverImage || "")
+	};
+}
+// src/lib/intl-format.ts
+var toDate = (value) => value instanceof Date ? value : new Date(value);
+/** The caller's own parts (`month`, `weekday`, …) win; a style is only the fallback for none. */
+var dateFormatter = ({ locale, timeZone = "UTC", ...options }, fallback) => new Intl.DateTimeFormat(locale, {
+	timeZone,
+	...Object.keys(options).length ? options : fallback
+});
+/** `formatDate('2026-05-01', { locale: 'en' })` → `"May 1, 2026"` */
+var formatDate = (value, options) => dateFormatter(options, { dateStyle: "long" }).format(toDate(value));
 // src/routes/showcase.tsx
 var showcase_exports = /* @__PURE__ */ __exportAll({
 	default: () => showcase_default,
-	loader: () => loader$4,
-	meta: () => meta
+	loader: () => loader$5,
+	meta: () => meta$1
 });
-async function loader$4() {
+async function loader$5() {
 	let media = defaultMedia.map((item, index) => ({
 		id: `default-${index}`,
 		...item
 	}));
+	let articles = defaultArticles;
 	try {
 		const response = await pocketbaseAdmin.listRecords("performance_media", {
 			filter: "published = true",
 			sort: "sort_order",
 			perPage: 60
 		});
-		if (response.items.length > 0) media = response.items;
+		if (response.items.length > 0) media = response.items.map(preparePerformanceItem);
 	} catch {}
-	return { media };
+	try {
+		const response = await pocketbaseAdmin.listRecords("articles", {
+			filter: "published = true",
+			sort: "-featured,-published_at",
+			perPage: 60
+		});
+		if (response.items.length > 0) articles = response.items.map(prepareArticle);
+	} catch {}
+	return {
+		media,
+		articles
+	};
 }
-function meta({ matches, location }) {
+function meta$1({ matches, location }) {
 	return seo({
 		matches,
 		location
@@ -1482,22 +1561,164 @@ var showcase_default = UNSAFE_withComponentProps(function ShowcasePage({ loaderD
 		/* @__PURE__ */ jsx(SiteHeader, {}),
 		/* @__PURE__ */ jsxs("main", {
 			className: "showcase-page",
-			children: [/* @__PURE__ */ jsxs("section", {
-				className: "page-hero",
-				children: [
-					/* @__PURE__ */ jsxs("div", {
-						className: "eyebrow",
-						children: [/* @__PURE__ */ jsx("span", { className: "status-dot" }), " SELECTED WORK"]
-					}),
-					/* @__PURE__ */ jsxs("h1", { children: [
-						"Ideas written",
-						/* @__PURE__ */ jsx("br", {}),
-						/* @__PURE__ */ jsx("span", { children: "in light." })
-					] }),
-					/* @__PURE__ */ jsx("p", { children: "A closer look at the forms, scale and emotion possible in the night sky." })
-				]
-			}), /* @__PURE__ */ jsx(Showcase, { items: loaderData.media })]
+			children: [
+				/* @__PURE__ */ jsxs("section", {
+					className: "page-hero",
+					children: [
+						/* @__PURE__ */ jsxs("div", {
+							className: "eyebrow",
+							children: [/* @__PURE__ */ jsx("span", { className: "status-dot" }), " SELECTED WORK"]
+						}),
+						/* @__PURE__ */ jsxs("h1", { children: [
+							"Ideas written",
+							/* @__PURE__ */ jsx("br", {}),
+							/* @__PURE__ */ jsx("span", { children: "in light." })
+						] }),
+						/* @__PURE__ */ jsx("p", { children: "A closer look at the forms, scale and emotion possible in the night sky." })
+					]
+				}),
+				/* @__PURE__ */ jsx(Showcase, { items: loaderData.media }),
+				/* @__PURE__ */ jsxs("section", {
+					className: "article-index section-wrap",
+					"aria-labelledby": "article-index-title",
+					children: [/* @__PURE__ */ jsxs("div", {
+						className: "article-index-heading",
+						children: [/* @__PURE__ */ jsxs("div", { children: [/* @__PURE__ */ jsx("div", {
+							className: "section-number",
+							children: "IDEAS / RESEARCH"
+						}), /* @__PURE__ */ jsxs("h2", {
+							id: "article-index-title",
+							children: [
+								"Notes from",
+								/* @__PURE__ */ jsx("br", {}),
+								/* @__PURE__ */ jsx("span", { children: "the studio." })
+							]
+						})] }), /* @__PURE__ */ jsx("p", { children: "Research, observations and commercial possibilities for the sky above us." })]
+					}), /* @__PURE__ */ jsx("div", {
+						className: "article-grid",
+						children: loaderData.articles.map((article) => /* @__PURE__ */ jsxs("article", {
+							className: "article-card",
+							children: [
+								/* @__PURE__ */ jsx("a", {
+									href: `/showcase/${article.slug}`,
+									className: "article-card-image",
+									children: /* @__PURE__ */ jsx("img", {
+										src: article.coverImage,
+										alt: "",
+										loading: "lazy"
+									})
+								}),
+								/* @__PURE__ */ jsxs("div", {
+									className: "article-card-meta",
+									children: [/* @__PURE__ */ jsx("span", { children: article.category }), /* @__PURE__ */ jsx("time", {
+										dateTime: article.published_at,
+										children: formatDate(article.published_at.slice(0, 10), {
+											locale: "en",
+											month: "short",
+											year: "numeric"
+										})
+									})]
+								}),
+								/* @__PURE__ */ jsx("h3", { children: /* @__PURE__ */ jsx("a", {
+									href: `/showcase/${article.slug}`,
+									children: article.title
+								}) }),
+								/* @__PURE__ */ jsx("p", { children: article.excerpt }),
+								/* @__PURE__ */ jsxs("a", {
+									className: "article-read",
+									href: `/showcase/${article.slug}`,
+									children: ["Read article ", /* @__PURE__ */ jsx(ArrowUpRight, { size: 16 })]
+								})
+							]
+						}, article.slug))
+					})]
+				})
+			]
 		}),
+		/* @__PURE__ */ jsx(SiteFooter, {})
+	] });
+});
+// src/routes/article.tsx
+var article_exports = /* @__PURE__ */ __exportAll({
+	default: () => article_default,
+	loader: () => loader$4,
+	meta: () => meta
+});
+async function loader$4({ params }) {
+	const fallback = defaultArticles.find((article) => article.slug === params.slug);
+	try {
+		const filter = pocketbaseAdmin.filter("slug = {:slug} && published = true", { slug: params.slug });
+		const response = await pocketbaseAdmin.listRecords("articles", {
+			filter,
+			perPage: 1
+		});
+		if (response.items[0]) return { article: prepareArticle(response.items[0]) };
+	} catch {}
+	if (fallback) return { article: fallback };
+	throw new Response("Article not found", { status: 404 });
+}
+function meta({ matches, location, loaderData }) {
+	const article = loaderData?.article;
+	return seo({
+		matches,
+		location
+	}, {
+		title: article ? `${article.title} — Sky Light Dynamics` : "Article — Sky Light Dynamics",
+		description: article?.excerpt || "Ideas and research from Sky Light Dynamics.",
+		image: article?.coverImage,
+		type: "article",
+		jsonLd: article ? {
+			"@context": "https://schema.org",
+			"@type": "Article",
+			headline: article.title,
+			datePublished: article.published_at,
+			image: article.coverImage,
+			publisher: {
+				"@type": "Organization",
+				name: "Sky Light Dynamics"
+			}
+		} : void 0
+	});
+}
+var article_default = UNSAFE_withComponentProps(function ArticlePage({ loaderData }) {
+	const { article } = loaderData;
+	return /* @__PURE__ */ jsxs(Fragment, { children: [
+		/* @__PURE__ */ jsx(SiteHeader, {}),
+		/* @__PURE__ */ jsx("main", { children: /* @__PURE__ */ jsxs("article", {
+			className: "article-page",
+			children: [
+				/* @__PURE__ */ jsxs("header", {
+					className: "article-hero",
+					children: [
+						/* @__PURE__ */ jsxs("a", {
+							href: "/showcase",
+							className: "article-back",
+							children: [/* @__PURE__ */ jsx(ArrowLeft, { size: 15 }), " Back to Showcase"]
+						}),
+						/* @__PURE__ */ jsxs("div", {
+							className: "article-kicker",
+							children: [/* @__PURE__ */ jsx("span", { children: article.category }), /* @__PURE__ */ jsx("time", {
+								dateTime: article.published_at,
+								children: formatDate(article.published_at.slice(0, 10), { locale: "en" })
+							})]
+						}),
+						/* @__PURE__ */ jsx("h1", { children: article.title }),
+						/* @__PURE__ */ jsx("p", { children: article.excerpt })
+					]
+				}),
+				/* @__PURE__ */ jsx("div", {
+					className: "article-cover",
+					children: /* @__PURE__ */ jsx("img", {
+						src: article.coverImage,
+						alt: ""
+					})
+				}),
+				/* @__PURE__ */ jsx("div", {
+					className: "article-body",
+					dangerouslySetInnerHTML: { __html: article.body }
+				})
+			]
+		}) }),
 		/* @__PURE__ */ jsx(SiteFooter, {})
 	] });
 });
@@ -1526,7 +1747,18 @@ function serializeSitemap(origin, entries) {
 * again in the same change that removes the collection.
 */
 async function getDynamicEntries() {
-	return [];
+	try {
+		const response = await pocketbaseAdmin.listRecords("articles", {
+			filter: "published = true",
+			fields: "slug,updated",
+			perPage: 200
+		});
+		if (response.items.length > 0) return response.items.map((article) => ({
+			path: `/showcase/${article.slug}`,
+			...article.updated && { lastmod: article.updated.slice(0, 10) }
+		}));
+	} catch {}
+	return defaultArticles.map((article) => ({ path: `/showcase/${article.slug}` }));
 }
 async function loader$3({ request }) {
 	const origin = siteOrigin(request);
@@ -1835,7 +2067,7 @@ var server_manifest_default = {
 			"hasClientMiddleware": false,
 			"hasDefaultExport": true,
 			"hasErrorBoundary": true,
-			"module": "/assets/root-BrDEQctx.js",
+			"module": "/assets/root-BSdln8mj.js",
 			"imports": [
 				"/assets/jsx-runtime-B3JqzSDr.js",
 				"/assets/_virtual_horizons-runtime-BxAtCBaI.js",
@@ -1860,11 +2092,11 @@ var server_manifest_default = {
 			"hasClientMiddleware": false,
 			"hasDefaultExport": true,
 			"hasErrorBoundary": false,
-			"module": "/assets/home-BU4wzf3E.js",
+			"module": "/assets/home-BPQRNRtQ.js",
 			"imports": [
 				"/assets/jsx-runtime-B3JqzSDr.js",
 				"/assets/site-footer-vqyi5I7r.js",
-				"/assets/showcase-B6joYkvk.js",
+				"/assets/showcase-Cou5jI13.js",
 				"/assets/cookie-consent-DHKCDv4m.js"
 			],
 			"css": [],
@@ -1911,11 +2143,38 @@ var server_manifest_default = {
 			"hasClientMiddleware": false,
 			"hasDefaultExport": true,
 			"hasErrorBoundary": false,
-			"module": "/assets/showcase-DWC-TJVE.js",
+			"module": "/assets/showcase-KCnXOKjj.js",
 			"imports": [
 				"/assets/jsx-runtime-B3JqzSDr.js",
 				"/assets/site-footer-vqyi5I7r.js",
-				"/assets/showcase-B6joYkvk.js",
+				"/assets/showcase-Cou5jI13.js",
+				"/assets/intl-format-CiWBrDCR.js",
+				"/assets/cookie-consent-DHKCDv4m.js"
+			],
+			"css": [],
+			"clientActionModule": void 0,
+			"clientLoaderModule": void 0,
+			"clientMiddlewareModule": void 0,
+			"hydrateFallbackModule": void 0
+		},
+		"routes/article": {
+			"id": "routes/article",
+			"parentId": "root",
+			"path": "showcase/:slug",
+			"index": void 0,
+			"caseSensitive": void 0,
+			"hasAction": false,
+			"hasLoader": true,
+			"hasClientAction": false,
+			"hasClientLoader": false,
+			"hasClientMiddleware": false,
+			"hasDefaultExport": true,
+			"hasErrorBoundary": false,
+			"module": "/assets/article-Dmb4o5xr.js",
+			"imports": [
+				"/assets/jsx-runtime-B3JqzSDr.js",
+				"/assets/site-footer-vqyi5I7r.js",
+				"/assets/intl-format-CiWBrDCR.js",
 				"/assets/cookie-consent-DHKCDv4m.js"
 			],
 			"css": [],
@@ -2009,8 +2268,8 @@ var server_manifest_default = {
 			"hydrateFallbackModule": void 0
 		}
 	},
-	"url": "/assets/manifest-4845c523.js",
-	"version": "4845c523",
+	"url": "/assets/manifest-d9b61147.js",
+	"version": "d9b61147",
 	"sri": void 0
 };
 // \0virtual:react-router/server-build
@@ -2064,6 +2323,14 @@ var routes = {
 		index: void 0,
 		caseSensitive: void 0,
 		module: showcase_exports
+	},
+	"routes/article": {
+		id: "routes/article",
+		parentId: "root",
+		path: "showcase/:slug",
+		index: void 0,
+		caseSensitive: void 0,
+		module: article_exports
 	},
 	"routes/sitemap.xml": {
 		id: "routes/sitemap.xml",

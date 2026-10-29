@@ -10,9 +10,11 @@ import { pocketbaseAdmin } from '@/lib/pocketbase-client.server';
 import {
 	defaultMedia,
 	defaultSettings,
+	preparePerformanceItem,
 	type PerformanceItem,
 	type SiteSettings,
 } from '@/data/performance-media';
+import { cmsImageUrl } from '@/lib/cms-media';
 
 // Loads the homepage content from PocketBase (managed in the admin dashboard).
 // Falls back to the bundled defaults if PocketBase is unreachable or empty, so
@@ -27,7 +29,8 @@ export async function loader() {
 		if (res.items.length > 0) {
 			const s = res.items[0];
 			settings = {
-				opening_image: s.opening_image || defaultSettings.opening_image,
+				opening_image: cmsImageUrl(s, 'opening_image_file', 'opening_image', defaultSettings.opening_image),
+				opening_image_file: s.opening_image_file || '',
 				opening_video: s.opening_video || '',
 				hero_eyebrow: s.hero_eyebrow || defaultSettings.hero_eyebrow,
 				hero_headline_1: s.hero_headline_1 || defaultSettings.hero_headline_1,
@@ -47,7 +50,7 @@ export async function loader() {
 			perPage: 60,
 		});
 		if (res.items.length > 0) {
-			media = res.items;
+			media = res.items.map(preparePerformanceItem);
 		}
 	} catch {
 		// keep defaults
