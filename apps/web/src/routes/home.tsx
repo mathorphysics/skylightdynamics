@@ -58,21 +58,21 @@ export async function loader() {
 
 export function meta({ matches, location, loaderData }: Route.MetaArgs) {
 	return seo({ matches, location }, {
-		title: 'Aerform — Extraordinary Drone Light Performances',
+		title: 'Sky Light Dynamics — Extraordinary Drone Light Performances',
 		description:
-			'Transform the night sky with Aerform. Discover professionally choreographed drone light performances and start a conversation about your vision.',
+			'Transform the night sky with Sky Light Dynamics. Discover professionally choreographed drone light performances and start a conversation about your vision.',
 		image: loaderData?.settings.opening_image,
 		jsonLd: [
 			{
 				'@context': 'https://schema.org',
 				'@type': 'WebSite',
-				name: 'Aerform',
+				name: 'Sky Light Dynamics',
 				description: 'Professional drone light performances',
 			},
 			{
 				'@context': 'https://schema.org',
 				'@type': 'Organization',
-				name: 'Aerform',
+				name: 'Sky Light Dynamics',
 				description: 'A professional provider of choreographed drone light performances.',
 			},
 		],

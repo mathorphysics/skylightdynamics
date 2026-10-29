@@ -5,7 +5,7 @@ import { renderToPipeableStream } from "react-dom/server";
 import { Links, Meta, Outlet, Scripts, ScrollRestoration, ServerRouter, UNSAFE_withComponentProps, UNSAFE_withErrorBoundaryProps, data, isRouteErrorResponse, useLocation } from "react-router";
 import { Fragment, jsx, jsxs } from "react/jsx-runtime";
 import { Fragment as Fragment$1, useCallback, useEffect, useId, useRef, useState } from "react";
-import { ArrowDown, ArrowUpRight, Check, Crosshair, Layers, Menu, Orbit, Sparkle, X } from "lucide-react";
+import { Aperture, ArrowDown, ArrowUpRight, Braces, Check, Crosshair, Layers, Menu, Orbit, RadioTower, Sparkle, X } from "lucide-react";
 import * as THREE from "three";
 import PocketBase, { ClientResponseError } from "pocketbase";
 import ipaddr from "ipaddr.js";
@@ -76,7 +76,7 @@ function handleRequest(request, responseStatusCode, responseHeaders, routerConte
 	});
 }
 // src/index.css?url
-var src_default = "/assets/index-Czhxj9kh.css";
+var src_default = "/assets/index-CwwroE0A.css";
 // src/lib/cookie-consent.ts
 var CONSENT_COOKIE = "cc_cookie";
 var CONSENT_MAX_AGE_SECONDS = 15724800;
@@ -308,7 +308,7 @@ var root_exports = /* @__PURE__ */ __exportAll({
 	default: () => root_default,
 	headers: () => headers,
 	links: () => links,
-	loader: () => loader$5
+	loader: () => loader$6
 });
 var links = () => [
 	{
@@ -342,7 +342,7 @@ var links = () => [
 * A `meta` export can only reach server data through `matches`, and the `headers`
 * export cannot see loader data at all, so both have to travel this way.
 */
-function loader$5({ request }) {
+function loader$6({ request }) {
 	const origin = siteOrigin(request);
 	return data({ origin }, { headers: { Link: `<${origin}/sitemap.xml>; rel="sitemap"; type="application/xml"` } });
 }
@@ -1090,6 +1090,13 @@ function useDisclosure({ isInitiallyOpen = false, closeOnNavigate = true, closeO
 	};
 }
 // src/components/site-header.tsx
+var navigation = [{
+	href: "/team",
+	label: "Team"
+}, {
+	href: "/showcase",
+	label: "Showcase"
+}];
 function SiteHeader() {
 	const menu = useDisclosure();
 	return /* @__PURE__ */ jsxs("header", {
@@ -1097,14 +1104,14 @@ function SiteHeader() {
 		children: [
 			/* @__PURE__ */ jsxs("a", {
 				className: "brand",
-				href: "#top",
-				"aria-label": "Aerform home",
+				href: "/",
+				"aria-label": "Sky Light Dynamics home",
 				children: [
 					/* @__PURE__ */ jsx(Sparkle, {
 						size: 26,
 						strokeWidth: 1.5
 					}),
-					" AERFORM",
+					" Sky Light Dynamics",
 					/* @__PURE__ */ jsx("span", {
 						className: "brand-dot",
 						children: "®"
@@ -1114,21 +1121,14 @@ function SiteHeader() {
 			/* @__PURE__ */ jsxs("nav", {
 				className: "desktop-nav",
 				"aria-label": "Main navigation",
-				children: [
-					/* @__PURE__ */ jsx("a", {
-						href: "#experience",
-						children: "The experience"
-					}),
-					/* @__PURE__ */ jsx("a", {
-						href: "#showcase",
-						children: "Showcase"
-					}),
-					/* @__PURE__ */ jsxs("a", {
-						href: "#contact",
-						className: "nav-contact",
-						children: ["Let’s talk ", /* @__PURE__ */ jsx(ArrowUpRight, { size: 16 })]
-					})
-				]
+				children: [navigation.map((item) => /* @__PURE__ */ jsx("a", {
+					href: item.href,
+					children: item.label
+				}, item.href)), /* @__PURE__ */ jsxs("a", {
+					href: "/#contact",
+					className: "nav-contact",
+					children: ["Let’s talk ", /* @__PURE__ */ jsx(ArrowUpRight, { size: 16 })]
+				})]
 			}),
 			/* @__PURE__ */ jsx("button", {
 				className: "menu-toggle",
@@ -1140,15 +1140,14 @@ function SiteHeader() {
 				className: "mobile-nav",
 				...menu.panelProps,
 				"aria-label": "Mobile navigation",
-				children: [
-					["#experience", "The experience"],
-					["#showcase", "Showcase"],
-					["#contact", "Let’s talk"]
-				].map(([href, label]) => /* @__PURE__ */ jsxs("a", {
-					href,
+				children: [...navigation, {
+					href: "/#contact",
+					label: "Let’s talk"
+				}].map((item) => /* @__PURE__ */ jsxs("a", {
+					href: item.href,
 					onClick: menu.close,
-					children: [label, /* @__PURE__ */ jsx(ArrowUpRight, { size: 18 })]
-				}, href))
+					children: [item.label, /* @__PURE__ */ jsx(ArrowUpRight, { size: 18 })]
+				}, item.href))
 			})
 		]
 	});
@@ -1161,20 +1160,20 @@ function SiteFooter() {
 			className: "footer-top",
 			children: [
 				/* @__PURE__ */ jsxs("a", {
-					href: "#top",
+					href: "/",
 					className: "brand",
-					children: [/* @__PURE__ */ jsx(Sparkle, { size: 24 }), " AERFORM"]
+					children: [/* @__PURE__ */ jsx(Sparkle, { size: 24 }), " Sky Light Dynamics"]
 				}),
 				/* @__PURE__ */ jsx("p", { children: "Extraordinary, by design." }),
 				/* @__PURE__ */ jsxs("a", {
-					href: "#contact",
+					href: "/#contact",
 					children: ["Enquire about a performance ", /* @__PURE__ */ jsx(ArrowUpRight, { size: 16 })]
 				})
 			]
 		}), /* @__PURE__ */ jsxs("div", {
 			className: "footer-bottom",
 			children: [
-				/* @__PURE__ */ jsx("span", { children: "© 2026 Aerform. All rights reserved." }),
+				/* @__PURE__ */ jsx("span", { children: "© 2026 Sky Light Dynamics. All rights reserved." }),
 				/* @__PURE__ */ jsx("span", { children: "DRONE LIGHT PERFORMANCES" }),
 				/* @__PURE__ */ jsx("button", {
 					onClick: openCookiePreferences,
@@ -1290,10 +1289,10 @@ var pocketbaseAdmin = {
 // src/routes/home.tsx
 var home_exports = /* @__PURE__ */ __exportAll({
 	default: () => home_default,
-	loader: () => loader$4,
-	meta: () => meta
+	loader: () => loader$5,
+	meta: () => meta$2
 });
-async function loader$4() {
+async function loader$5() {
 	let settings = { ...defaultSettings };
 	let media = defaultMedia.map((m, i) => ({
 		id: `default-${i}`,
@@ -1327,23 +1326,23 @@ async function loader$4() {
 		media
 	};
 }
-function meta({ matches, location, loaderData }) {
+function meta$2({ matches, location, loaderData }) {
 	return seo({
 		matches,
 		location
 	}, {
-		title: "Aerform — Extraordinary Drone Light Performances",
-		description: "Transform the night sky with Aerform. Discover professionally choreographed drone light performances and start a conversation about your vision.",
+		title: "Sky Light Dynamics — Extraordinary Drone Light Performances",
+		description: "Transform the night sky with Sky Light Dynamics. Discover professionally choreographed drone light performances and start a conversation about your vision.",
 		image: loaderData?.settings.opening_image,
 		jsonLd: [{
 			"@context": "https://schema.org",
 			"@type": "WebSite",
-			name: "Aerform",
+			name: "Sky Light Dynamics",
 			description: "Professional drone light performances"
 		}, {
 			"@context": "https://schema.org",
 			"@type": "Organization",
-			name: "Aerform",
+			name: "Sky Light Dynamics",
 			description: "A professional provider of choreographed drone light performances."
 		}]
 	});
@@ -1360,9 +1359,155 @@ var home_default = UNSAFE_withComponentProps(function HomePage({ loaderData }) {
 		/* @__PURE__ */ jsx(SiteFooter, {})
 	] });
 });
+// src/routes/team.tsx
+var team_exports = /* @__PURE__ */ __exportAll({
+	default: () => team_default,
+	meta: () => meta$1
+});
+function meta$1({ matches, location }) {
+	return seo({
+		matches,
+		location
+	}, {
+		title: "Team — Sky Light Dynamics",
+		description: "Meet the creative, technical and production disciplines behind every Sky Light Dynamics performance."
+	});
+}
+var disciplines = [
+	{
+		icon: Aperture,
+		title: "Creative direction",
+		copy: "Concept, story and choreography shaped into one unforgettable visual language."
+	},
+	{
+		icon: Braces,
+		title: "Technical design",
+		copy: "Flight programming and precision systems that translate imagination into movement."
+	},
+	{
+		icon: RadioTower,
+		title: "Show operations",
+		copy: "Planning, safety and live delivery considered carefully from the ground to the sky."
+	}
+];
+var team_default = UNSAFE_withComponentProps(function TeamPage() {
+	return /* @__PURE__ */ jsxs(Fragment, { children: [
+		/* @__PURE__ */ jsx(SiteHeader, {}),
+		/* @__PURE__ */ jsxs("main", { children: [
+			/* @__PURE__ */ jsxs("section", {
+				className: "page-hero",
+				children: [
+					/* @__PURE__ */ jsxs("div", {
+						className: "eyebrow",
+						children: [/* @__PURE__ */ jsx("span", { className: "status-dot" }), " THE TEAM"]
+					}),
+					/* @__PURE__ */ jsxs("h1", { children: [
+						"The people behind",
+						/* @__PURE__ */ jsx("br", {}),
+						/* @__PURE__ */ jsx("span", { children: "the light." })
+					] }),
+					/* @__PURE__ */ jsx("p", { children: "Artists, technologists and operators working as one to create experiences that move people." })
+				]
+			}),
+			/* @__PURE__ */ jsxs("section", {
+				className: "team-disciplines section-wrap",
+				"aria-label": "Team disciplines",
+				children: [/* @__PURE__ */ jsx("div", {
+					className: "section-number",
+					children: "ONE TEAM / EVERY DETAIL"
+				}), /* @__PURE__ */ jsx("div", {
+					className: "discipline-grid",
+					children: disciplines.map(({ icon: Icon, title, copy }, index) => /* @__PURE__ */ jsxs("article", { children: [
+						/* @__PURE__ */ jsxs("span", {
+							className: "discipline-index",
+							children: ["0", index + 1]
+						}),
+						/* @__PURE__ */ jsx(Icon, {
+							size: 28,
+							strokeWidth: 1.2
+						}),
+						/* @__PURE__ */ jsx("h2", { children: title }),
+						/* @__PURE__ */ jsx("p", { children: copy })
+					] }, title))
+				})]
+			}),
+			/* @__PURE__ */ jsxs("section", {
+				className: "page-cta section-wrap",
+				children: [/* @__PURE__ */ jsxs("div", { children: [/* @__PURE__ */ jsx("div", {
+					className: "section-number",
+					children: "START A CONVERSATION"
+				}), /* @__PURE__ */ jsx("h2", { children: "Bring us your vision." })] }), /* @__PURE__ */ jsx("a", {
+					className: "primary-button",
+					href: "/#contact",
+					children: "Let’s talk"
+				})]
+			})
+		] }),
+		/* @__PURE__ */ jsx(SiteFooter, {})
+	] });
+});
+// src/routes/showcase.tsx
+var showcase_exports = /* @__PURE__ */ __exportAll({
+	default: () => showcase_default,
+	loader: () => loader$4,
+	meta: () => meta
+});
+async function loader$4() {
+	let media = defaultMedia.map((item, index) => ({
+		id: `default-${index}`,
+		...item
+	}));
+	try {
+		const response = await pocketbaseAdmin.listRecords("performance_media", {
+			filter: "published = true",
+			sort: "sort_order",
+			perPage: 60
+		});
+		if (response.items.length > 0) media = response.items;
+	} catch {}
+	return { media };
+}
+function meta({ matches, location }) {
+	return seo({
+		matches,
+		location
+	}, {
+		title: "Showcase — Sky Light Dynamics",
+		description: "Explore the scale, movement and visual possibilities of Sky Light Dynamics drone light performances.",
+		image: defaultMedia[0]?.image
+	});
+}
+var showcase_default = UNSAFE_withComponentProps(function ShowcasePage({ loaderData }) {
+	return /* @__PURE__ */ jsxs(Fragment, { children: [
+		/* @__PURE__ */ jsx(SiteHeader, {}),
+		/* @__PURE__ */ jsxs("main", {
+			className: "showcase-page",
+			children: [/* @__PURE__ */ jsxs("section", {
+				className: "page-hero",
+				children: [
+					/* @__PURE__ */ jsxs("div", {
+						className: "eyebrow",
+						children: [/* @__PURE__ */ jsx("span", { className: "status-dot" }), " SELECTED WORK"]
+					}),
+					/* @__PURE__ */ jsxs("h1", { children: [
+						"Ideas written",
+						/* @__PURE__ */ jsx("br", {}),
+						/* @__PURE__ */ jsx("span", { children: "in light." })
+					] }),
+					/* @__PURE__ */ jsx("p", { children: "A closer look at the forms, scale and emotion possible in the night sky." })
+				]
+			}), /* @__PURE__ */ jsx(Showcase, { items: loaderData.media })]
+		}),
+		/* @__PURE__ */ jsx(SiteFooter, {})
+	] });
+});
 // src/routes/sitemap.xml.ts
 var sitemap_xml_exports = /* @__PURE__ */ __exportAll({ loader: () => loader$3 });
-var STATIC_PATHS = ["/"];
+var STATIC_PATHS = [
+	"/",
+	"/team",
+	"/showcase"
+];
 function escapeXml(value) {
 	return value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\"", "&quot;").replaceAll("'", "&apos;");
 }
@@ -1690,7 +1835,7 @@ var server_manifest_default = {
 			"hasClientMiddleware": false,
 			"hasDefaultExport": true,
 			"hasErrorBoundary": true,
-			"module": "/assets/root-CzBnM5a3.js",
+			"module": "/assets/root-BrDEQctx.js",
 			"imports": [
 				"/assets/jsx-runtime-B3JqzSDr.js",
 				"/assets/_virtual_horizons-runtime-BxAtCBaI.js",
@@ -1715,8 +1860,64 @@ var server_manifest_default = {
 			"hasClientMiddleware": false,
 			"hasDefaultExport": true,
 			"hasErrorBoundary": false,
-			"module": "/assets/home-CWZIS_C6.js",
-			"imports": ["/assets/jsx-runtime-B3JqzSDr.js", "/assets/cookie-consent-DHKCDv4m.js"],
+			"module": "/assets/home-BU4wzf3E.js",
+			"imports": [
+				"/assets/jsx-runtime-B3JqzSDr.js",
+				"/assets/site-footer-vqyi5I7r.js",
+				"/assets/showcase-B6joYkvk.js",
+				"/assets/cookie-consent-DHKCDv4m.js"
+			],
+			"css": [],
+			"clientActionModule": void 0,
+			"clientLoaderModule": void 0,
+			"clientMiddlewareModule": void 0,
+			"hydrateFallbackModule": void 0
+		},
+		"routes/team": {
+			"id": "routes/team",
+			"parentId": "root",
+			"path": "team",
+			"index": void 0,
+			"caseSensitive": void 0,
+			"hasAction": false,
+			"hasLoader": false,
+			"hasClientAction": false,
+			"hasClientLoader": false,
+			"hasClientMiddleware": false,
+			"hasDefaultExport": true,
+			"hasErrorBoundary": false,
+			"module": "/assets/team-CqvsOmzA.js",
+			"imports": [
+				"/assets/jsx-runtime-B3JqzSDr.js",
+				"/assets/site-footer-vqyi5I7r.js",
+				"/assets/cookie-consent-DHKCDv4m.js"
+			],
+			"css": [],
+			"clientActionModule": void 0,
+			"clientLoaderModule": void 0,
+			"clientMiddlewareModule": void 0,
+			"hydrateFallbackModule": void 0
+		},
+		"routes/showcase": {
+			"id": "routes/showcase",
+			"parentId": "root",
+			"path": "showcase",
+			"index": void 0,
+			"caseSensitive": void 0,
+			"hasAction": false,
+			"hasLoader": true,
+			"hasClientAction": false,
+			"hasClientLoader": false,
+			"hasClientMiddleware": false,
+			"hasDefaultExport": true,
+			"hasErrorBoundary": false,
+			"module": "/assets/showcase-DWC-TJVE.js",
+			"imports": [
+				"/assets/jsx-runtime-B3JqzSDr.js",
+				"/assets/site-footer-vqyi5I7r.js",
+				"/assets/showcase-B6joYkvk.js",
+				"/assets/cookie-consent-DHKCDv4m.js"
+			],
 			"css": [],
 			"clientActionModule": void 0,
 			"clientLoaderModule": void 0,
@@ -1808,12 +2009,12 @@ var server_manifest_default = {
 			"hydrateFallbackModule": void 0
 		}
 	},
-	"url": "/assets/manifest-5bc14e8c.js",
-	"version": "5bc14e8c",
+	"url": "/assets/manifest-4845c523.js",
+	"version": "4845c523",
 	"sri": void 0
 };
 // \0virtual:react-router/server-build
-var assetsBuildDirectory = "..\\..\\dist\\apps\\web\\client";
+var assetsBuildDirectory = "../../dist/apps/web/client";
 var basename = "/";
 var future = {
 	"unstable_customRouteDiscovery": false,
@@ -1847,6 +2048,22 @@ var routes = {
 		index: true,
 		caseSensitive: void 0,
 		module: home_exports
+	},
+	"routes/team": {
+		id: "routes/team",
+		parentId: "root",
+		path: "team",
+		index: void 0,
+		caseSensitive: void 0,
+		module: team_exports
+	},
+	"routes/showcase": {
+		id: "routes/showcase",
+		parentId: "root",
+		path: "showcase",
+		index: void 0,
+		caseSensitive: void 0,
+		module: showcase_exports
 	},
 	"routes/sitemap.xml": {
 		id: "routes/sitemap.xml",

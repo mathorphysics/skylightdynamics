@@ -14,6 +14,12 @@ type Pages = {
   "/": {
     params: {};
   };
+  "/team": {
+    params: {};
+  };
+  "/showcase": {
+    params: {};
+  };
   "/sitemap.xml": {
     params: {};
   };
@@ -33,11 +39,19 @@ type Pages = {
 type RouteFiles = {
   "root.tsx": {
     id: "root";
-    page: "/" | "/sitemap.xml" | "/robots.txt" | "/api/health" | "/api/*";
+    page: "/" | "/team" | "/showcase" | "/sitemap.xml" | "/robots.txt" | "/api/health" | "/api/*";
   };
   "routes/home.tsx": {
     id: "routes/home";
     page: "/";
+  };
+  "routes/team.tsx": {
+    id: "routes/team";
+    page: "/team";
+  };
+  "routes/showcase.tsx": {
+    id: "routes/showcase";
+    page: "/showcase";
   };
   "routes/sitemap.xml.ts": {
     id: "routes/sitemap.xml";
@@ -60,6 +74,8 @@ type RouteFiles = {
 type RouteModules = {
   "root": typeof import("./src/root.tsx");
   "routes/home": typeof import("./src/routes/home.tsx");
+  "routes/team": typeof import("./src/routes/team.tsx");
+  "routes/showcase": typeof import("./src/routes/showcase.tsx");
   "routes/sitemap.xml": typeof import("./src/routes/sitemap.xml.ts");
   "routes/robots.txt": typeof import("./src/routes/robots.txt.ts");
   "routes/api.health": typeof import("./src/routes/api.health.ts");
