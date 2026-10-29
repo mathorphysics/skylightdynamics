@@ -728,13 +728,15 @@ function Experience() {
 		})]
 	});
 }
+// src/lib/pocketbase-url.ts
+var PUBLIC_POCKETBASE_URL = "/hcgi/platform".replace(/\/$/, "");
 // src/lib/cms-media.ts
 function cmsImageUrl(record, fileField, urlField, fallback = "") {
 	const values = record;
 	const filename = values[fileField];
 	if (typeof filename === "string" && filename && record.id) {
 		const collection = record.collectionName || "articles";
-		return `/hcgi/platform/api/files/${encodeURIComponent(collection)}/${encodeURIComponent(record.id)}/${encodeURIComponent(filename)}`;
+		return `${PUBLIC_POCKETBASE_URL}/api/files/${encodeURIComponent(collection)}/${encodeURIComponent(record.id)}/${encodeURIComponent(filename)}`;
 	}
 	const externalUrl = values[urlField];
 	return typeof externalUrl === "string" && externalUrl ? externalUrl : fallback;
@@ -842,7 +844,7 @@ function Showcase({ items }) {
 		]
 	});
 }
-var pocketbaseClient = new PocketBase("/hcgi/platform");
+var pocketbaseClient = new PocketBase(PUBLIC_POCKETBASE_URL);
 // src/hooks/use-form-submission.ts
 /** Name of the hidden field bots fill in and people never see. */
 var HONEYPOT_FIELD = "company_website";
@@ -2092,11 +2094,11 @@ var server_manifest_default = {
 			"hasClientMiddleware": false,
 			"hasDefaultExport": true,
 			"hasErrorBoundary": false,
-			"module": "/assets/home-BPQRNRtQ.js",
+			"module": "/assets/home-BZ52gYXN.js",
 			"imports": [
 				"/assets/jsx-runtime-B3JqzSDr.js",
 				"/assets/site-footer-vqyi5I7r.js",
-				"/assets/showcase-Cou5jI13.js",
+				"/assets/showcase-DPL6sKHZ.js",
 				"/assets/cookie-consent-DHKCDv4m.js"
 			],
 			"css": [],
@@ -2143,11 +2145,11 @@ var server_manifest_default = {
 			"hasClientMiddleware": false,
 			"hasDefaultExport": true,
 			"hasErrorBoundary": false,
-			"module": "/assets/showcase-KCnXOKjj.js",
+			"module": "/assets/showcase-DdtRHD_l.js",
 			"imports": [
 				"/assets/jsx-runtime-B3JqzSDr.js",
 				"/assets/site-footer-vqyi5I7r.js",
-				"/assets/showcase-Cou5jI13.js",
+				"/assets/showcase-DPL6sKHZ.js",
 				"/assets/intl-format-CiWBrDCR.js",
 				"/assets/cookie-consent-DHKCDv4m.js"
 			],
@@ -2268,8 +2270,8 @@ var server_manifest_default = {
 			"hydrateFallbackModule": void 0
 		}
 	},
-	"url": "/assets/manifest-d9b61147.js",
-	"version": "d9b61147",
+	"url": "/assets/manifest-09f06b1d.js",
+	"version": "09f06b1d",
 	"sri": void 0
 };
 // \0virtual:react-router/server-build

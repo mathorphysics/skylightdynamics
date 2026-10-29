@@ -19,3 +19,14 @@ The site uses PocketBase as its CMS. Non-developers can sign in to the PocketBas
 5. Set `published_at`, turn on `published`, and save.
 
 Only records with `published` enabled appear on the public website. Locally, the dashboard is available from the PocketBase service (normally `http://localhost:8090/_/`). Production credentials and the dashboard URL are managed by the hosting environment.
+
+### Connecting a production PocketBase service
+
+The managed Hostinger Node.js web-app environment cannot run PocketBase as a second process. Deploy PocketBase separately with persistent storage, then configure these environment variables on the website deployment:
+
+- `POCKETBASE_URL`: private or public PocketBase base URL used by the server.
+- `VITE_POCKETBASE_URL`: public PocketBase base URL used for uploaded images and browser requests.
+- `PB_SUPERUSER_EMAIL`: PocketBase superuser email used by server-side content loaders.
+- `PB_SUPERUSER_PASSWORD`: matching PocketBase superuser password.
+
+For example, both URL variables can use `https://cms.skylightdynamics.com`. Environment variables prefixed with `VITE_` are embedded at build time, so redeploy the website after changing them.

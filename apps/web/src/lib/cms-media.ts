@@ -1,3 +1,5 @@
+import { PUBLIC_POCKETBASE_URL } from '@/lib/pocketbase-url';
+
 type CmsImageRecord = {
 	id?: string;
 	collectionName?: string;
@@ -15,7 +17,7 @@ export function cmsImageUrl<T extends CmsImageRecord>(
 	if (typeof filename === 'string' && filename && record.id) {
 		const collection = record.collectionName || 'articles';
 
-		return `/hcgi/platform/api/files/${encodeURIComponent(collection)}/${encodeURIComponent(record.id)}/${encodeURIComponent(filename)}`;
+		return `${PUBLIC_POCKETBASE_URL}/api/files/${encodeURIComponent(collection)}/${encodeURIComponent(record.id)}/${encodeURIComponent(filename)}`;
 	}
 
 	const externalUrl = values[urlField];
